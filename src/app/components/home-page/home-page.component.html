@@ -1,6 +1,6 @@
 <header class="flex justify-between items-center p-6 shadow-md">
     <h1 class="text-xl font-bold">ChatApp</h1>
-    <button [routerLink]="'/login'" class="text-gray-700 text-lg font-bold cursor-pointer">SignUp/Login</button>
+    <button (click)="toggleLogin()" class="text-gray-700 text-lg font-bold cursor-pointer">SignUp/Login</button>
 </header>
 <main class="flex flex-col lg:flex-row items-center justify-center p-12 gap-12 mt-8">
     <div class="text-center lg:text-left lg:w-1/2 ml-16">
@@ -18,3 +18,7 @@
             class="w-3/4 lg:w-2/3 object-cover rounded-md shadow-lg">
     </div>
 </main>
+
+<div *ngIf="showLogin" class="fixed inset-0 flex items-center justify-center bg-black/20 backdrop-blur-xl">
+    <app-login></app-login>
+</div>
