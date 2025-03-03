@@ -31,6 +31,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   userStatusMap: { [key: string]: string } = {};
   showEmojiPicker = false;
   private previousMessageCount = 0;
+  isOpenChat = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: object,private ngZone: NgZone, private userService: UserService, private router: Router, private socketService: SocketServiceService, private chatService: ChatService) { }
 
@@ -71,6 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   openChat(chat: any) {
     this.chatId = chat.chatId;
+    this.isOpenChat = true;
     this.chatRecipientName = chat.recipient.name;
     this.chatRecipientPic = chat.recipient.picture || 'assets/default-avatar.png';
     this.chatService.joinChat(this.chatId);
