@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { LoginResponse, ResponseModel, User } from '../models/responseModel';
 
 @Injectable({
@@ -10,7 +10,8 @@ import { LoginResponse, ResponseModel, User } from '../models/responseModel';
 export class UserService {
   private apiKey = 'http://localhost:3030/api/user';
   private user: User | null = null;
-
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.loadUser();
@@ -24,21 +25,27 @@ export class UserService {
   private loadUser() {
     if (typeof window !== 'undefined' && window.sessionStorage) {
       const userData = sessionStorage.getItem('LoggedUser');
-      this.user = userData ? JSON.parse(userData) : null;
+      if (userData) {
+        this.userSubject.next(JSON.parse(userData));
+      }
     }
   }
 
-  getUser() {
-    return this.user;
+  setUser(user: User) {
+    this.userSubject.next(user);
   }
 
-  searchUsers(query: string): Observable<ResponseModel<User[]>> {
-    return this.http.get<ResponseModel<User[]>>(`${this.apiKey}/searchUser${query}`);
+  getUser() {
+    return this.userSubject.value;
+  }
+
+  searchUsers(email:string, query: string): Observable<ResponseModel<User[]>> {
+    return this.http.get<ResponseModel<User[]>>(`${this.apiKey}/searchUser?q=${query}`);
   }
 
   logout() {
     sessionStorage.removeItem('LoggedUser');
-    this.user = null;
+    this.userSubject.next(null);
   }
 
 }

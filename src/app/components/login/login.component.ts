@@ -13,7 +13,7 @@ import { UserService } from '../../services/user.service';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
 
-  constructor(private userService: UserService, private router: Router, private toastr: ToastrService,private ngZone: NgZone) { }
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private ngZone: NgZone) { }
 
   ngOnInit() { }
 
@@ -56,18 +56,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
   handleCredentialResponse(response: any) {
     const decodedToken = this.decodeToken(response.credential);
     const userPayload = {
-      googleId: decodedToken.sub,  
+      googleId: decodedToken.sub,
       name: decodedToken.name,
       email: decodedToken.email,
       picture: decodedToken.picture,
     };
     this.userService.googleLogin(userPayload).subscribe({
       next: (res) => {
-        this.toastr.success('Login successful!', 'Success');
         sessionStorage.setItem('LoggedUser', JSON.stringify(res.data));
-        this.ngZone.run(() => {
-          this.router.navigate(['/chat']);
-        });
+        this.userService.setUser(res.data.user);
+        this.router.navigate(['/chat']);
+        this.toastr.success('Login successful!', 'Success');
       },
       error: (err) => {
         console.error('Login error:', err);

@@ -3,14 +3,17 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), 
     provideClientHydration(),
+    provideHttpClient(withFetch()),
+    importProvidersFrom(PickerModule),
     importProvidersFrom(
       HttpClientModule, 
       ToastrModule.forRoot({
