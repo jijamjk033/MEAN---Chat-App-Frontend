@@ -8,7 +8,7 @@ import { LoginResponse, ResponseModel, User } from '../models/responseModel';
 })
 
 export class UserService {
-  private apiKey = 'http://localhost:3030/api/user';
+  private apiKey = import.meta.env.NG_APP_USER_API_URL;
   private user: User | null = null;
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
@@ -18,7 +18,6 @@ export class UserService {
   }
 
   googleLogin(userData: object): Observable<ResponseModel<LoginResponse>> {
-    console.log(userData);
     return this.http.post<ResponseModel<LoginResponse>>(`${this.apiKey}/login`, userData)
   }
 

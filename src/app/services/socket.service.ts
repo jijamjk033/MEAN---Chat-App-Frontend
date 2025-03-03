@@ -9,7 +9,7 @@ import { User } from '../models/responseModel';
 export class SocketServiceService {
   user: User | null = null;
   socket: Socket | null = null;
-  private port = 'http://localhost:3030';
+  private port = import.meta.env.NG_APP_SERVER_PORT;
 
   constructor(private userService:UserService) { }
 

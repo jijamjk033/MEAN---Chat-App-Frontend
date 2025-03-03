@@ -2,7 +2,7 @@
     <h1 class="text-xl font-bold">ChatApp</h1>
     <button (click)="toggleLogin()" class="text-gray-700 text-lg font-bold cursor-pointer">SignUp/Login</button>
 </header>
-<main class="flex flex-col lg:flex-row items-center justify-center p-12 gap-12 mt-8">
+<main class="flex lg:flex-row items-center justify-center p-12 gap-12 mt-8">
     <div class="text-center lg:text-left lg:w-1/2 ml-16">
         <h2 class="text-5xl font-bold">CHAT WEB APP</h2>
         <p class="text-gray-600 mt-4 text-lg leading-relaxed">
@@ -19,6 +19,6 @@
     </div>
 </main>
 
-<div *ngIf="showLogin" class="fixed inset-0 flex items-center justify-center bg-black/20 backdrop-blur-xl">
+<div *ngIf="showLogin" class="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur">
     <app-login></app-login>
 </div>

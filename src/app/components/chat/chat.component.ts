@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { User } from '../../models/responseModel';
@@ -12,7 +12,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor, DatePipe, CommonModule,PickerComponent],
+  imports: [FormsModule, NgIf, NgFor, DatePipe, CommonModule, PickerComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
@@ -30,8 +30,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   chatRecipientPic: string = '';
   userStatusMap: { [key: string]: string } = {};
   showEmojiPicker = false;
+  private previousMessageCount = 0;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object, private userService: UserService, private router: Router, private socketService: SocketServiceService, private chatService: ChatService) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: object,private ngZone: NgZone, private userService: UserService, private router: Router, private socketService: SocketServiceService, private chatService: ChatService) { }
 
   ngOnInit() {
     this.user = this.userService.getUser();
@@ -44,10 +45,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       document.addEventListener('click', this.onClickOutside.bind(this));
     }
     this.listenForNewMessages();
-    const savedChat = sessionStorage.getItem('activeChatId');
-    if (savedChat) {
-      this.openChat(savedChat);
-    }
     this.listenForStatusUpdates();
   }
 
@@ -63,11 +60,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   scrollToBottom() {
-    if (this.chatMessages) {
+    if (this.chatMessages && this.messages.length > this.previousMessageCount) {
       setTimeout(() => {
-        console.log('Scrolling to bottom...');
         const element = this.chatMessages.nativeElement;
         element.scrollTop = element.scrollHeight;
+        this.previousMessageCount = this.messages.length;
       }, 100);
     }
   }
@@ -79,7 +76,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.joinChat(this.chatId);
     this.fetchMessages();
     this.scrollToBottom();
-    sessionStorage.setItem('activeChatId', chat);
+    // sessionStorage.setItem('activeChatId', chat);
   }
 
   toggleEmojiPicker() {
@@ -109,7 +106,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.onUserStatusUpdate((statusUpdate) => {
       this.userStatusMap = { ...this.userStatusMap, [statusUpdate.userId]: statusUpdate.status };
     });
-  }  
+  }
 
   getUserStatus(userId: string): string {
     return this.userStatusMap[userId] || 'offline';
@@ -192,6 +189,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   logout() {
     this.userService.logout();
-    this.router.navigate(['/home']);
+    this.ngZone.run(() => {
+      this.router.navigate(['/home']);
+    });
   }
 }

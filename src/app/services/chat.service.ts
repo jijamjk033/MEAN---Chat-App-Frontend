@@ -9,7 +9,8 @@ import { SocketServiceService } from './socket.service';
   providedIn: 'root'
 })
 export class ChatService {
-  private apiKey = 'http://localhost:3030/api/chat';
+  private apiKey = import.meta.env.NG_APP_CHAT_API_URL;
+
   constructor(private http: HttpClient, private socketService: SocketServiceService) { }
 
   initiateChat(userId: string, selectedUser: string): Observable<ResponseModel<chatResponse>> {

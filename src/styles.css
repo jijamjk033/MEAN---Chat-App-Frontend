@@ -1,5 +1,9 @@
 @import "ngx-toastr/toastr";
-@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 .custom-toaster {
     background-color: #89c8fc;

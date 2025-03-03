@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       if (typeof google !== 'undefined' && google.accounts) {
         clearInterval(interval);
         google.accounts.id.initialize({
-          client_id: '203873504405-vln40513prupk46pltapte2ccbo410om.apps.googleusercontent.com',
+          client_id: import.meta.env.NG_APP_GOOGLE_CLIENT_ID,
           callback: (response: object) => {
             this.handleCredentialResponse(response);
           },
@@ -63,10 +63,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
     };
     this.userService.googleLogin(userPayload).subscribe({
       next: (res) => {
-        sessionStorage.setItem('LoggedUser', JSON.stringify(res.data));
-        this.userService.setUser(res.data.user);
-        this.router.navigate(['/chat']);
-        this.toastr.success('Login successful!', 'Success');
+        this.ngZone.run(() => {  // Move the entire logic inside ngZone.run()
+          sessionStorage.setItem('LoggedUser', JSON.stringify(res.data));
+          console.log('Login response:', res.data);
+          this.userService.setUser(res.data.user);
+          console.log("Navigating to chat...");
+          this.router.navigate(['/chat']);
+          this.toastr.success('Login successful!', 'Success');
+        });
       },
       error: (err) => {
         console.error('Login error:', err);
