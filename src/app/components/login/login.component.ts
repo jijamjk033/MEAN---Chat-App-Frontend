@@ -63,13 +63,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
     };
     this.userService.googleLogin(userPayload).subscribe({
       next: (res) => {
-        this.ngZone.run(() => {  // Move the entire logic inside ngZone.run()
+        this.ngZone.run(() => { 
           sessionStorage.setItem('LoggedUser', JSON.stringify(res.data));
           console.log('Login response:', res.data);
           this.userService.setUser(res.data.user);
-          console.log("Navigating to chat...");
-          this.router.navigate(['/chat']);
           this.toastr.success('Login successful!', 'Success');
+          setTimeout(() => {
+            console.log("Navigating to chat...");
+            this.router.navigate(['/chat']);
+          }, 500);
         });
       },
       error: (err) => {

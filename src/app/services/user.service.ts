@@ -31,12 +31,22 @@ export class UserService {
   }
 
   setUser(user: User) {
+    this.user = user;
     this.userSubject.next(user);
   }
+  
 
-  getUser() {
-    return this.userSubject.value;
+  getUser(): User | null {
+    if (!this.user) {
+      const userData = sessionStorage.getItem('LoggedUser');
+      if (userData) {
+        this.user = JSON.parse(userData);
+        this.userSubject.next(this.user);
+      }
+    }
+    return this.user;
   }
+  
 
   searchUsers(email:string, query: string): Observable<ResponseModel<User[]>> {
     return this.http.get<ResponseModel<User[]>>(`${this.apiKey}/searchUser?q=${query}`);
