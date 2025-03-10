@@ -78,7 +78,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.joinChat(this.chatId);
     this.fetchMessages();
     this.scrollToBottom();
-    // sessionStorage.setItem('activeChatId', chat);
   }
 
   toggleEmojiPicker() {
@@ -106,9 +105,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   listenForStatusUpdates() {
     this.chatService.onUserStatusUpdate((statusUpdate) => {
+      console.log("Received status update:", statusUpdate);
       this.userStatusMap = { ...this.userStatusMap, [statusUpdate.userId]: statusUpdate.status };
     });
   }
+  
 
   getUserStatus(userId: string): string {
     return this.userStatusMap[userId] || 'offline';
@@ -172,7 +173,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.getChats(this.user.email).subscribe({
       next: (response) => {
         console.log('Chats fetched:', response.data);
-        this.chats = response.data;
+        this.chats = response.data.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime());
       },
       error: (err) => console.error('Error fetching chats:', err)
     });
