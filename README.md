@@ -1,26 +1,65 @@
-# Frontend
+## 💬 Chat App – Frontend (Angular)
+This is the frontend of a real-time Chat Application built with Angular. It connects with a Node.js backend using Socket.IO to enable instant messaging between users. The app supports user authentication, private/public chat rooms, and live message streaming.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.1.
+## ✨ Features
+🔐 User registration and login (JWT Auth)
 
-## Development server
+💬 Real-time messaging using Socket.IO
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+👁️ Online users list
 
-## Code scaffolding
+✅ Message delivery indicators
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+📱 Responsive UI design (Angular Material / Tailwind)
 
-## Build
+## 🧰 Tech Stack
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Frontend Framework: Angular
 
-## Running unit tests
+State Management: RxJS
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Real-Time: Socket.IO-client
 
-## Running end-to-end tests
+UI Library: Angular Material / Tailwind CSS
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Authentication: JWT stored in localStorage
+
+Backend Integration: REST + WebSocket API (via Socket.IO)
+
+## 📁 Folder Structure
+
+chat-app-frontend/
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── chat/
+│   │   │   ├── auth/
+│   │   ├── services/
+│   │   ├── models/
+│   │   ├── guards/
+│   │   └── app-routing.module.ts
+│   └── assets/
+├── angular.json
+└── package.json
+
+## 🚀 Getting Started
+
+1. Clone the Repository
+git clone https://github.com/yourusername/chat-app-frontend.git
+cd chat-app-frontend 
+2. Install Dependencies
+npm install
+3. Set Backend API Endpoint
+In environment.ts:
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:5000/api',
+  socketUrl: 'http://localhost:5000'
+};
+4. Run the App
+ng serve
+Visit the app at:
+🌐 http://localhost:4200
 
 ## Further help
 
